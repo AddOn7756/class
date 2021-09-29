@@ -4,6 +4,12 @@
    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
    <bean class="test.Test" id="test" />
-   <bean class="test.LgTV" id="tv" />
+   
+   <bean class="test.LgTV" id="tv">
+		<constructor-arg ref="gphone"></constructor-arg>
+   </bean>
+   
+   <bean class="test.GalaxyPhone" id="gphone" />
+   <bean class="test.IPhone" id="iphone" />
    
 </beans>

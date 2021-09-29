@@ -15,6 +15,7 @@ public class Client {
       t.print();*/
       TV tv=(TV)factory.getBean("tv");
       tv.powerOn();
+      tv.chUP();
       
       // 3. 스프링 컨테이너 종료
       factory.close();
