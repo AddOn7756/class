@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.sun.crypto.provider.RSACipher;
-
 import model.common.JNDI;
 
 public class UsersDAO {
@@ -22,14 +20,13 @@ public class UsersDAO {
 	static String sql_DELETE = "DELETE FROM USERS WHERE USER_NUM=?";
 	// 회원정보 수정 가능 한 것 : 비밀번호, 핸드폰번호, 이메일, 주소, 아이콘 번호
 	static String sql_UPDATE = "UPDATE USERS SET USER_PW=?, USER_HP=?, USER_EMAIL=?, USER_ADDR=?, ICON_ID=? WHERE USER_NUM=?";
-	
-	
+	// 회원 로그인
+	static String sql_login = "SELECT USER_ID, USER_PW WHERE USER_ID=?";
 	//============================================================================
 	public ArrayList<UsersVO> getDBList() {
 		Connection conn = JNDI.getConnection();
 		PreparedStatement pstmt = null;
 		ArrayList<UsersVO> datas = new ArrayList<UsersVO>();
-
 		try {
 			pstmt = conn.prepareStatement(sql_SELECT_ALL);
 			ResultSet rs = pstmt.executeQuery();
@@ -64,9 +61,8 @@ public class UsersDAO {
 		PreparedStatement pstmt = null;
 		UsersVO data = new UsersVO();
 
-		String sql = "SELECT * FROM USERS WHERE USER_NUM=?";
 		try {
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql_SELECT_ONE);
 			pstmt.setInt(1, vo.getUserNum());
 			ResultSet rs = pstmt.executeQuery();
 
@@ -118,6 +114,30 @@ public class UsersDAO {
 		return res;
 	}
 	//============================================================================
+	public boolean login(UsersVO vo) {
+		Connection conn = JNDI.getConnection();
+		PreparedStatement pstmt = null;
+		boolean res = false;
+		
+		try {
+			pstmt = conn.prepareStatement(sql_login);
+			pstmt.setString(1, vo.getId());
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(rs.getString("USER_PW").equals(vo.getPw())) {
+					res=true;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("UsersDAO login에서 발생 ");
+			e.printStackTrace();
+		} finally {
+			JNDI.disconnect(pstmt, conn);
+		}
+		return res;
+	}
+	//============================================================================
 	public boolean delete(UsersVO vo) {
 		Connection conn = JNDI.getConnection();
 		PreparedStatement pstmt = null;
@@ -161,7 +181,4 @@ public class UsersDAO {
 		}
 		return res;
 	}
-
-
-
 }
