@@ -18,9 +18,10 @@
 	<!-- ========================================================================= -->
 	<%
 		ArrayList<ReplySet> rdatas = new ArrayList<ReplySet>();
-		ArrayList<BoardSet> bdatas = new ArrayList<BoardSet>();
+		BoardSet bdatas = new BoardSet();
 		BoardVO bdata = new BoardVO();
 		ReplySet rdata = new ReplySet();
+		MyReplySet mrs = new MyReplySet();
 	%>
 	<!-- ========================================================================= -->
 	<h2>댓글 출력</h2>
@@ -28,7 +29,7 @@
 		//=========================================================================
 		// 1 게시판 : N ReplySet(댓글+대댓글)객체 전부 출력
 		
-		/* uvo.setUserNum(0);	// 유저 pk
+		/* uvo.setUserNum(1);	// 유저 pk
 		rvo.setbId(1); 		// 게시판 id
 		
 		// 게시판 id를 가진 어떤 user의 댓글 전체 출력
@@ -58,23 +59,23 @@
 		bvo.setbCtgr("자유게시판");		// 카테고리
 		bvo.setbTitle("");			// 검색하고 싶은 제목
 		
-		bdatas = bDAO.getDBList(uvo, bvo, "", 2); //(3번째 정렬방식, 4번째 pageNum)
-	
-		for (BoardSet v : bdatas) {
+		bdatas = bDAO.getDBList(uvo, bvo, "조회순", 1); //(3번째 정렬방식, 4번째 pageNum)
+		
+		for (BoardVO v : bdatas.getBlist()) {
 			// System.out.println(v);
 			out.println("<hr>");
 			out.println(v+"<hr>");
 			out.println("<hr>");
-		}
+		} 
 		//=========================================================================
 				
-		uvo.setUserNum(1);	// 내가 쓴 글이면 조회수 증가 안함
+		/* uvo.setUserNum(1);	// 내가 쓴 글이면 조회수 증가 안함
 		bvo.setbId(1);
 		
 		
 		bdata = bDAO.getDBData(uvo, bvo);
 		System.out.println(bdata);
-		out.println(bdata);
+		out.println(bdata); */
 		
 	%>
 	<!-- ========================================================================= -->
@@ -112,12 +113,13 @@
 	
 	out.println(rDAO.insert(rvo)); */
 	
+	// 댓글 삭제
+	/* rvo.setrId(6);
+	rvo.setbId(2);
+	rvo.setParentId(0);
+	out.println(rDAO.delete(rvo)); */
 	
-	rvo.setrId(4);
-	rvo.setbId(1);
-	rvo.setParentId(1);
-	out.println(rDAO.delete(rvo));
-	
+	// 게시글 삭제
 	/* bvo.setbId(25);
 	out.println(bDAO.delete(bvo)); */
 	
@@ -143,6 +145,14 @@
 	rvo.setrId(13);
 	
 	out.println( rDAO.update(rvo)); */
+	
+	/* uvo.setUserNum(2);
+	
+	mrs = rDAO.myReply(uvo, 0);
+	System.out.println(mrs);
+	out.println(mrs);
+	 */
+	
 	
 	%>
 	

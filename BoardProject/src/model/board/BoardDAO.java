@@ -59,19 +59,19 @@ public class BoardDAO {
 
 	// userNum 값 없을 때 0넣어주세요
 	@SuppressWarnings("resource")
-	public ArrayList<BoardSet> getDBList(UsersVO uvo, BoardVO vo, String pageOrder, int pageNum) {
+	public BoardSet getDBList(UsersVO uvo, BoardVO vo, String pageOrder, int pageNum) {
 		Connection conn = JNDI.getConnection();
 		PreparedStatement pstmt = null;
+		BoardSet datas = new BoardSet();
 		// 게시글을 담은 리스트 + 전체 게시물 cnt;
-		ArrayList<BoardSet> datas = new ArrayList<BoardSet>();
 		String sql;
 		int cnt=0;
 
-		int startNum = (pageNum-1)*pageSize;
-		int lastNum = ((pageNum-1)*pageSize)+pageSize;
+		int startNum = pageNum*pageSize;
+		int lastNum = (pageNum*pageSize)+pageSize;
 
-		System.out.println(uvo);
-		System.out.println(vo);
+		// System.out.println(uvo);
+		// System.out.println(vo);
 
 		try {
 			// 로그인 아이디가 있다면 (내 글보기)
@@ -79,17 +79,17 @@ public class BoardDAO {
 				if(pageOrder.equals("댓글순")) {
 					sql_SELECT_ALL_USER = "SELECT * FROM ("
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
-							+ "SELECT * FROM BOARD WHERE USER_NUM=? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
+							+ "SELECT * FROM BOARD WHERE USER_NUM=? AND B_TITLE LIKE '%'||?||'%' ORDER BY RE_CNT DESC, B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY RE_CNT DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY RE_CNT DESC";
 					System.out.println("댓글순 통과");
 				}
 				else if(pageOrder.equals("조회순")){
 					sql_SELECT_ALL_USER = "SELECT * FROM ("
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
-							+ "SELECT * FROM BOARD WHERE USER_NUM=? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
+							+ "SELECT * FROM BOARD WHERE USER_NUM=? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_HIT DESC, B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY B_HIT DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY B_HIT DESC";
 					System.out.println("조회순 통과");
 				}
 				else {
@@ -97,7 +97,7 @@ public class BoardDAO {
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
 							+ "SELECT * FROM BOARD WHERE USER_NUM=? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY '%' DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY '%' DESC";
 					System.out.println("전체 통과");
 				}
 
@@ -115,17 +115,17 @@ public class BoardDAO {
 				if(pageOrder.equals("댓글순")) {
 					sql_SELECT_ALL = "SELECT * FROM ("
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
-							+ "SELECT * FROM BOARD WHERE B_CTGR = ? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
+							+ "SELECT * FROM BOARD WHERE B_CTGR = ? AND B_TITLE LIKE '%'||?||'%' ORDER BY RE_CNT DESC, B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY RE_CNT DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY RE_CNT DESC";
 					System.out.println("댓글순 통과");
 				}
 				else if(pageOrder.equals("조회순")){
 					sql_SELECT_ALL = "SELECT * FROM ("
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
-							+ "SELECT * FROM BOARD WHERE B_CTGR = ? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
+							+ "SELECT * FROM BOARD WHERE B_CTGR = ? AND B_TITLE LIKE '%'||?||'%' ORDER BY BY B_HIT DESC,B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY B_HIT DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY B_HIT DESC";
 					System.out.println("조회순 통과");
 				}
 				else {
@@ -133,7 +133,7 @@ public class BoardDAO {
 							+ "SELECT ROWNUM AS RNUM, BOARD.* FROM ("
 							+ "SELECT * FROM BOARD WHERE B_CTGR = ? AND B_TITLE LIKE '%'||?||'%' ORDER BY B_DATE DESC"
 							+ ") BOARD WHERE ROWNUM <= ?" //끝점
-							+ ") WHERE RNUM > ? ORDER BY '%' DESC, B_DATE DESC";
+							+ ") WHERE RNUM > ? ORDER BY B_DATE DESC";
 					System.out.println("전체 통과");
 				}
 
@@ -154,7 +154,6 @@ public class BoardDAO {
 					System.out.println("전체 통과");
 				}*/
 				pstmt.setInt(4, startNum); 		// start 번호
-
 			}
 
 			ResultSet rs = pstmt.executeQuery();
@@ -177,6 +176,7 @@ public class BoardDAO {
 
 				blist.add(bvo);
 				System.out.println("bvo 확인 : "+bvo);
+				
 			}
 			rs.close();
 
@@ -184,28 +184,28 @@ public class BoardDAO {
 
 			if(uvo.getUserNum() > 0) {
 				// 내가 쓴 글 전체 개수 출력
-				sql = "SELECT COUNT(*) FROM BOARD WHERE B_CTGR=? AND USER_NUM=?";
+				sql = "SELECT COUNT(*) FROM BOARD WHERE B_CTGR=? AND USER_NUM=? AND B_TITLE LIKE '%'||?||'%'";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, vo.getbCtgr());
 				pstmt.setInt(2, uvo.getUserNum());
+				pstmt.setString(3, vo.getbTitle());
 			}
 			else {
 				// 카테고리별 전체 개수 출력
-				sql = "SELECT COUNT(*) FROM BOARD WHERE B_CTGR=?";
+				sql = "SELECT COUNT(*) FROM BOARD WHERE B_CTGR=? AND B_TITLE LIKE '%'||?||'%'";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, vo.getbCtgr());
+				pstmt.setString(2, vo.getbTitle());
 			}
-
+			
 			ResultSet crs = pstmt.executeQuery();
 			if(crs.next()) {
 				cnt=crs.getInt(1);
 			}
-			crs.close();
-
-			BoardSet bset = new BoardSet();
-			bset.setBlist(blist);
-			bset.setBoardCnt(cnt);
-			datas.add(bset);
+			crs.close();	
+			
+			datas.setBlist(blist);
+			datas.setBoardCnt(cnt);
 
 		} catch(SQLException e) {
 			System.out.println("boardDAO getDBList에서 발생");
@@ -248,7 +248,7 @@ public class BoardDAO {
 			rs.close();
 
 			// 내가 쓴 글이면 조회수 증가 안함
-			if(uvo.getUserNum() == bvo.getUserNum()) {
+			if(uvo.getUserNum() == data.getUserNum()) {
 				check = true;
 			}
 			else {

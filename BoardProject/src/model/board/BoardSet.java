@@ -23,7 +23,4 @@ public class BoardSet {
 		return "BoardSet [blist=" + blist + ", boardCnt=" + boardCnt + "]";
 	}
 	
-
-	
-
 }
