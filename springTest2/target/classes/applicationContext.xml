@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:component-scan base-package="test" />
+	
+	<bean class="test.Sword" id="sword"></bean>
+	<bean class="test.Bow" id="bow"></bean>
+		
+	<!-- <bean class="test.Champ" id="champ">
+		<property name="name" value="티모"></property>
+		<property name="inven">
+			<list>
+				<value>내셔의 이빨</value>
+				<value>균열 생성기</value>
+				<value>리안드리</value>
+			</list>
+		</property>
+		<property name="weapon" ref="sword"></property>
+	</bean>
+	
+	<bean class="test.Sword" id="sword"></bean>
+	<bean class="test.Bow" id="bow"></bean>
+ -->
+</beans>
