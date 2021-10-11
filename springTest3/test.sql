@@ -16,10 +16,14 @@ CREATE TABLE MEMBER2(
 
 );
 
-INSERT INTO MEMBER VALUES('kim', '1234', '辫揪', 'USER');
-INSERT INTO MEMBER VALUES('admin', '1234', '包府磊', 'ADMIN');
+select * from board2;
+select * from member2;
 
-INSERT INTO(ID, TITLE, CONTENT) VALUES(1, '力格','kim', '臂郴侩');
+
+INSERT INTO MEMBER2 VALUES('kim', '1234', '辫揪', 'USER');
+INSERT INTO MEMBER2 VALUES('admin', '1234', '包府磊', 'ADMIN');
+
+INSERT INTO BOARD2(ID, TITLE, WRITER, CONTENT) VALUES(1, '力格','kim', '臂郴侩');
 
 
 

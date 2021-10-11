@@ -3,12 +3,19 @@ package model.board;
 import java.sql.Date;
 
 public class BoardVO {
-	
+
 	private int id;
 	private String title;
 	private String writer;
 	private String content;
 	private Date wdate;
+	
+	public Date getWdate() {
+		return wdate;
+	}
+	public void setWdate(Date wdate) {
+		this.wdate = wdate;
+	}
 	public int getId() {
 		return id;
 	}
@@ -33,18 +40,11 @@ public class BoardVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getWdate() {
-		return wdate;
-	}
-	public void setWdate(Date wdate) {
-		this.wdate = wdate;
-	}
+	
 	@Override
 	public String toString() {
 		return "BoardVO [id=" + id + ", title=" + title + ", writer=" + writer + ", content=" + content + ", wdate="
 				+ wdate + "]";
 	}
-	
-	
 	
 }

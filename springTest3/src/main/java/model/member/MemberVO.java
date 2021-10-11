@@ -1,16 +1,16 @@
 package model.member;
 
 public class MemberVO {
-
-	private int id;
+	
+	private String id;
 	private String password;
 	private String name;
 	private String role;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getPassword() {
@@ -35,6 +35,4 @@ public class MemberVO {
 	public String toString() {
 		return "MemberVO [id=" + id + ", password=" + password + ", name=" + name + ", role=" + role + "]";
 	}
-	
-	
 }

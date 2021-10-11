@@ -2,26 +2,30 @@ package model.member;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import model.board.SpringBoardDAO;
 
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
 
-	private MemberDAO memberDAO;
+	@Autowired
+	private SpringMemberDAO memberDAO;
+
+	@Override
+	public void insertMember(MemberVO vo) {
+		memberDAO.insertMember(vo);
+	}
 	
 	@Override
-	public boolean insert(MemberVO vo) {
-		return memberDAO.insert(vo);
+	public void updateMember(MemberVO vo) {
+		memberDAO.updateMember(vo);
 	}
 
 	@Override
-	public boolean update(MemberVO vo) {
-		return memberDAO.update(vo);
-	}
-
-	@Override
-	public boolean delete(MemberVO vo) {
-		return memberDAO.delete(vo);
+	public void deleteMember(MemberVO vo) {
+		memberDAO.deleteMember(vo);
 	}
 
 	@Override
@@ -33,7 +37,7 @@ public class MemberServiceImpl implements MemberService{
 	public MemberVO getMember(MemberVO vo) {
 		return memberDAO.getMember(vo);
 	}
-
 	
+
 	
 }

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import model.common.JDBC;
 
+// DAO-> 드라이버, CP, MyBatis, JPA, ...
+// Service에서 DAO객체를 이용하여 CRUD기능을 제공할 예정!
+//폰Service <-> 시계DAO
+
 @Repository("boardDAO")
 public class BoardDAO {
 
@@ -18,119 +22,108 @@ public class BoardDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 
-	private final String insertSQL="INSERT INTO BOARD2(ID, TITLE, WRITER, CONTENT) VALUES((SELECT NVL(SELECT MAX(ID),0)+1 FROM BOARD),?,?,?)";
-	private final String updateSQL="UPDATE BOARD2 SET TITLE=?, CONTENT=? WHERE ID=?";
-	private final String deleteSQL="DELETE FROM BOARD2 WHERE ID=?";
-	private final String getBoardSQL="SELECT * FROM BOARD2 WHERE ID=? ";
-	private final String getBoardListSQL="SELECT * FROM BOARD2";
-	
-	
-	public boolean insertBoard(BoardVO vo) 	{
-		conn = JDBC.getConnection();
-		boolean res = false;
+	private final String insertSQL="insert into board2 (id,title,writer,content) values((select nvl(max(id),0)+1 from board2),?,?,?)";
+	private final String updateSQL="update board2 set title=?,content=? where id=?";
+	private final String deleteSQL="delete board2 where id=?";
+	private final String getBoardSQL="select * from board2 where id=?";
+	private final String getBoardListSQL="select * from board2 order by id desc";
 
+	public void insertBoard(BoardVO vo) {
+		System.out.println("dao insert");
 		try {
-			pstmt = conn.prepareStatement(insertSQL);
+			conn=JDBC.getConnection();
+			pstmt=conn.prepareStatement(insertSQL);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getWriter());
 			pstmt.setString(3, vo.getContent());
 			pstmt.executeUpdate();
-			res=true;
 		} catch (SQLException e) {
-			System.out.println("BoardDAO insert");
 			e.printStackTrace();
-		} finally {
+		}
+		finally {
 			JDBC.close(conn, pstmt);
 		}
-		return res;
-	} 
-
-	public boolean updateBoard(BoardVO vo) {
-		conn = JDBC.getConnection();
-		boolean res = false;
+	}
+	
+	public void updateBoard(BoardVO vo) {
+		System.out.println("dao update");
 		try {
-			pstmt = conn.prepareStatement(updateSQL);
+			conn=JDBC.getConnection();
+			pstmt=conn.prepareStatement(updateSQL);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
 			pstmt.setInt(3, vo.getId());
 			pstmt.executeUpdate();
-			res=true;
 		} catch (SQLException e) {
-			System.out.println("BoardDAO update");
 			e.printStackTrace();
-		} finally {
+		}
+		finally {
 			JDBC.close(conn, pstmt);
 		}
-		return res;
 	}
-
-	public boolean deleteBoard(BoardVO vo) {
-		conn = JDBC.getConnection();
-		boolean res = false;
+	
+	public void deleteBoard(BoardVO vo) {
+		System.out.println("dao delete");
 		try {
-			pstmt = conn.prepareStatement(deleteSQL);
+			conn=JDBC.getConnection();
+			pstmt=conn.prepareStatement(deleteSQL);
 			pstmt.setInt(1, vo.getId());
 			pstmt.executeUpdate();
-			res=true;
 		} catch (SQLException e) {
-			System.out.println("BoardDAO delete");
 			e.printStackTrace();
-		} finally {
+		}
+		finally {
 			JDBC.close(conn, pstmt);
 		}
-		return res;
 	}
+	
 	public List<BoardVO> getBoardList(BoardVO vo) {
-		List<BoardVO> datas = new ArrayList<BoardVO>();
-		conn = JDBC.getConnection();
+		System.out.println("dao getList");
+		List<BoardVO> datas=new ArrayList<BoardVO>();
 		try {
-			pstmt = conn.prepareStatement(getBoardListSQL);
+			conn=JDBC.getConnection();
+			pstmt=conn.prepareStatement(getBoardListSQL);
 			rs=pstmt.executeQuery();
-
 			while(rs.next()) {
-				BoardVO data = new BoardVO();
-
-				data.setId(rs.getInt("ID"));
-				data.setTitle(rs.getString("TITLE"));
-				data.setContent(rs.getString("CONTENT"));
-				data.setWriter(rs.getString("WRITER"));
-				data.setWdate(rs.getDate("WDATE"));
-
+				BoardVO data=new BoardVO();
+				data.setId(rs.getInt("id"));
+				data.setTitle(rs.getString("title"));
+				data.setWriter(rs.getString("writer"));
+				data.setContent(rs.getString("content"));
+				data.setWdate(rs.getDate("wdate"));
 				datas.add(data);
 			}
-			rs.close();
 		} catch (SQLException e) {
-			System.out.println("BoardDAO getBoardList");
 			e.printStackTrace();
-		} finally {
-			JDBC.close(conn, pstmt);
+		}
+		finally {
+			JDBC.close(conn, pstmt,rs);
 		}
 		return datas;
 	}
+	
 	public BoardVO getBoard(BoardVO vo) {
-		conn = JDBC.getConnection();
-		BoardVO data = new BoardVO();
+		System.out.println("dao get");
+		BoardVO data=null;
 		try {
-			pstmt = conn.prepareStatement(getBoardSQL);
+			conn=JDBC.getConnection();
+			pstmt=conn.prepareStatement(getBoardSQL);
 			pstmt.setInt(1, vo.getId());
 			rs=pstmt.executeQuery();
-
 			if(rs.next()) {
-				data.setId(rs.getInt("ID"));
-				data.setTitle(rs.getString("TITLE"));
-				data.setContent(rs.getString("CONTENT"));
-				data.setWriter(rs.getString("WRITER"));
-				data.setWdate(rs.getDate("WDATE"));
-
+				data=new BoardVO();
+				data.setId(rs.getInt("id"));
+				data.setTitle(rs.getString("title"));
+				data.setWriter(rs.getString("writer"));
+				data.setContent(rs.getString("content"));
+				data.setWdate(rs.getDate("wdate"));
 			}
-			rs.close();
 		} catch (SQLException e) {
-			System.out.println("BoardDAO getBoardList");
 			e.printStackTrace();
-		} finally {
-			JDBC.close(conn, pstmt);
+		}
+		finally {
+			JDBC.close(conn, pstmt, rs);
 		}
 		return data;
 	}
-
 }

@@ -6,24 +6,25 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class BoardClient {
+	
 	public static void main(String[] args) {
-
-		AbstractApplicationContext factory=new GenericXmlApplicationContext("applicationContext.xml");
-
-		BoardService bs= (BoardService)factory.getBean("boardService");
+		AbstractApplicationContext factory = new GenericXmlApplicationContext("applicationContext.xml");
 		
-		BoardVO vo = new BoardVO();
-		vo.setContent("郴侩 累己");
-		vo.setTitle("力格");
-		vo.setWriter("包府磊");
+		BoardService bs=(BoardService)factory.getBean("boardService");
+		
+		BoardVO vo=new BoardVO();
+		vo.setContent("雮挫毄");
+		vo.setTitle("鞝滊");
+		vo.setWriter("甏�毽瀽");
 		bs.insertBoard(vo);
 		
-		List<BoardVO> datas = bs.getBoardList(vo);
-		for (BoardVO data:datas) {
+		List<BoardVO> datas=bs.getBoardList(vo);
+		
+		for(BoardVO data:datas) {
 			System.out.println(data);
 		}
 		
-		
 		factory.close();
 	}
+	
 }
