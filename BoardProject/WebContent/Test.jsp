@@ -153,10 +153,7 @@
 	out.println(mrs);
 	 */
 	
-	
 	%>
 	
-	
-
 </body>
 </html>
