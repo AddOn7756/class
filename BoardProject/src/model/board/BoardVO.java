@@ -14,7 +14,6 @@ public class BoardVO {
 	private int bHit;
 	private String bLang;
 	private int reCnt;
-	private int boardCnt;
 	
 	public int getbId() {
 		return bId;
@@ -76,24 +75,13 @@ public class BoardVO {
 	public void setReCnt(int reCnt) {
 		this.reCnt = reCnt;
 	}
-	
-	public int getBoardCnt() {
-		return boardCnt;
-	}
-	public void setBoardCnt(int boardCnt) {
-		this.boardCnt = boardCnt;
-	}
-	/*@Override
-	public String toString() {
-		return "BoardVO [게시글ID : " + bId + " 유저번호 : " + userNum + " 카테고리 : " + bCtgr + " 제목 : " + bTitle
-				+ " 내용 : " + bContent + "작성자 : " + bWriter + " 작성일 : " + bDate + " 조회수 : " + bHit + " 언어 : "
-				+ bLang + " 댓글수 : " + reCnt + "]\n";
-	}*/
 	@Override
 	public String toString() {
-		return "제목 : " + bTitle
-				+ " 내용 : " + bContent + "작성자 : " + bWriter + " 작성일 : " + bDate + " 조회수 : " + bHit + " 댓글수 : " + reCnt + "]\n";
+		return "BoardVO [bId=" + bId + ", userNum=" + userNum + ", bCtgr=" + bCtgr + ", bTitle=" + bTitle
+				+ ", bContent=" + bContent + ", bWriter=" + bWriter + ", bDate=" + bDate + ", bHit=" + bHit + ", bLang="
+				+ bLang + ", reCnt=" + reCnt + "]";
 	}
+	
 	
 
 }
